@@ -1,6 +1,8 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from tgbot.keyboards.callback_factory import lang_callback, jins_callback, education_callback, programming_lang_callback, tasdiqlash_callback, yoshlar_callback
+from tgbot.keyboards.callback_factory import testlar_callback, lang_callback, tasdiqlash_callback, jins_callback, extra_lang_callback, education_callback,programming_lang_callback, yoshlar_callback
 from tgbot.hr_i18n import _
+from tgbot.services.api import categories, extra_categories, sessionss
+
 
 language_inl_kb = InlineKeyboardMarkup(
     row_width=1, 
@@ -10,60 +12,103 @@ language_inl_kb = InlineKeyboardMarkup(
     [InlineKeyboardButton("🇺🇿 O'zbekcha", callback_data=lang_callback.new("lotin_uz"))]
 ])
 
-jins_inl_kb = InlineKeyboardMarkup(
+def jins_inl_kb(lang):
+    return InlineKeyboardMarkup(
     row_width=1,
     inline_keyboard=[
-    [InlineKeyboardButton(_("👨 Эркак"), callback_data=jins_callback.new('erkak')), 
-    InlineKeyboardButton(_("👩 Аёл"), callback_data=jins_callback.new('ayol'))],
-    [InlineKeyboardButton(_("🔙  Оркага"), callback_data=tasdiqlash_callback.new("ortga"))]
+    [InlineKeyboardButton(_("👨 Эркак", locale=lang), callback_data=jins_callback.new('E'))], 
+    [InlineKeyboardButton(_("👩 Аёл", locale=lang), callback_data=jins_callback.new('A'))],
+    [InlineKeyboardButton(_("🔙  Оркага", locale=lang), callback_data=tasdiqlash_callback.new("ortga"))]
     ])
 
-education_inl_kb = InlineKeyboardMarkup(
-    row_width=1,
-    inline_keyboard=[
-    [InlineKeyboardButton(_("Ўрта "), callback_data=education_callback.new("o'rta"))], 
-    [InlineKeyboardButton(_("Ўрта махсус"), callback_data=education_callback.new("o'rta-maxsus"))],
-    [InlineKeyboardButton(_("Олий тугалланмаган"), callback_data=education_callback.new("oliy-tugallanmagan"))],
-    [InlineKeyboardButton(_("Олий"), callback_data=education_callback.new("oliy"))], 
-    [InlineKeyboardButton(_("Магистр"), callback_data=education_callback.new("magistr"))],
-    [InlineKeyboardButton(_("PhD"), callback_data=education_callback.new("phd"))],
-    [InlineKeyboardButton(_("🔙  Оркага"), callback_data=tasdiqlash_callback.new("ortga"))]
-    ])
-
-programming_lang_inl_kb = InlineKeyboardMarkup(
+def education_inl_kb(lang):
+    return InlineKeyboardMarkup(
     row_width=2,
     inline_keyboard=[
-    [InlineKeyboardButton(_("Python"), callback_data=programming_lang_callback.new("Python")), 
-    InlineKeyboardButton(_("Laravel"), callback_data=programming_lang_callback.new("Laravel"))],
-
-    [InlineKeyboardButton(_("Angular"), callback_data=programming_lang_callback.new("Angular")), 
-    InlineKeyboardButton(_("JavaScript"), callback_data=programming_lang_callback.new("JavaScript"))],
-
-    [InlineKeyboardButton(_("Flutter"), callback_data=programming_lang_callback.new("Flutter"))],
-    [InlineKeyboardButton(_("🔙  Оркага"), callback_data=tasdiqlash_callback.new("ortga"))]
+    [InlineKeyboardButton(_("Ўрта ", locale=lang), callback_data=education_callback.new("O'rta"))], 
+    [InlineKeyboardButton(_("Ўрта махсус", locale=lang), callback_data=education_callback.new("O'rta maxsus"))],
+    [InlineKeyboardButton(_("Олий тугалланмаган", locale=lang), callback_data=education_callback.new("Oliy tugallanmagan"))],
+    [InlineKeyboardButton(_("Олий", locale=lang), callback_data=education_callback.new("Oliy"))], 
+    [InlineKeyboardButton(_("Магистр", locale=lang), callback_data=education_callback.new("Magister"))],
+    [InlineKeyboardButton(_("PhD", locale=lang), callback_data=education_callback.new("PhD"))],
+    [InlineKeyboardButton(_("🔙  Оркага", locale=lang), callback_data=tasdiqlash_callback.new("ortga"))]
     ])
 
-tasdiqlash_inl_kb = InlineKeyboardMarkup(
+async def prog_languages_kb(lang):
+    programming_lang_inl_kb = InlineKeyboardMarkup()
+
+    cat = await categories(lang, await sessionss())
+    for key in cat:
+        programming_lang_inl_kb.add(InlineKeyboardButton(f"{cat[key]}", callback_data=programming_lang_callback.new(cat[key], key)))
+
+    programming_lang_inl_kb.add(InlineKeyboardButton(_("🔙  Оркага", locale=lang), callback_data=tasdiqlash_callback.new("ortga")))
+
+    return programming_lang_inl_kb
+
+def tasdiqlash_inl_kb(lang):
+    return InlineKeyboardMarkup(
     row_width=1,
     inline_keyboard=[
-    [InlineKeyboardButton(_("♻️Кайта тузиш"), callback_data=tasdiqlash_callback.new("restart"))],
-    [InlineKeyboardButton(_("✅Тасдиклаш"), callback_data=tasdiqlash_callback.new("accept"))],
-    [InlineKeyboardButton(_("🔙  Оркага"), callback_data=tasdiqlash_callback.new("ortga"))]
+    [InlineKeyboardButton(_("♻️Кайта тузиш", locale=lang), callback_data=tasdiqlash_callback.new("restart"))],
+    [InlineKeyboardButton(_("✅Тасдиклаш", locale=lang), callback_data=tasdiqlash_callback.new("accept"))],
+    [InlineKeyboardButton(_("🔙  Оркага", locale=lang), callback_data=tasdiqlash_callback.new("ortga"))]
     ])
 
-orqaga_inl_kb = InlineKeyboardMarkup(
+def qayta_tuzish_inl_kb(lang):
+    return InlineKeyboardMarkup(
     row_width=1,
     inline_keyboard=[
-    [InlineKeyboardButton(_("🔙  Оркага"), callback_data=tasdiqlash_callback.new("ortga"))]
+    [InlineKeyboardButton(_("Анкетани кайта тузиш", locale=lang), callback_data=tasdiqlash_callback.new("restart"))]
+    ])
+
+def orqaga_inl_kb(lang):
+    return InlineKeyboardMarkup(
+    row_width=1,
+    inline_keyboard=[
+    [InlineKeyboardButton(_("🔙  Оркага", locale=lang), callback_data=tasdiqlash_callback.new("ortga"))]
 ])
 
-yosh_tanlash_inl_kb = InlineKeyboardMarkup(
+def yosh_tanlash_inl_kb(lang):
+    return InlineKeyboardMarkup(
     row_width=2,
     inline_keyboard=[
-    [InlineKeyboardButton(_('18 - 24'), callback_data=yoshlar_callback.new("18-24")),
-    InlineKeyboardButton(_("25 - 30"), callback_data=yoshlar_callback.new("25-30"))],
-    [InlineKeyboardButton(_("31 - 35"), callback_data=yoshlar_callback.new("31-35")), 
-    InlineKeyboardButton(_("36 - 45"), callback_data=yoshlar_callback.new("36-45"))],
-    [InlineKeyboardButton(_("46 - ..."), callback_data=yoshlar_callback.new("46-..."))],
-    [InlineKeyboardButton(_("🔙  Оркага"), callback_data=tasdiqlash_callback.new("ortga"))]
+    [InlineKeyboardButton('18 - 24', callback_data=yoshlar_callback.new("18-24"))],
+    [InlineKeyboardButton("25 - 30", callback_data=yoshlar_callback.new("25-30"))],
+    [InlineKeyboardButton("31 - 35", callback_data=yoshlar_callback.new("31-35"))], 
+    [InlineKeyboardButton("36 - 45", callback_data=yoshlar_callback.new("36-45"))],
+    [InlineKeyboardButton("46 - ...", callback_data=yoshlar_callback.new("46-..."))],
+    [InlineKeyboardButton(_("🔙  Оркага", locale=lang), callback_data=tasdiqlash_callback.new("ortga"))]
     ])
+
+async def extra_skills_kb(lang, categories2 = dict()):
+
+    extra_skills_kb2 = InlineKeyboardMarkup()
+    cat = await extra_categories(lang, await sessionss())
+    for key in cat:
+        if cat[key] in categories2:
+            extra_skills_kb2.add(InlineKeyboardButton(f"{cat[key]} ✔", callback_data=extra_lang_callback.new(cat[key], key)))
+        else:
+            extra_skills_kb2.add(InlineKeyboardButton(f"{cat[key]}", callback_data=extra_lang_callback.new(cat[key], key)))
+
+    extra_skills_kb2.add(InlineKeyboardButton(_("✅Тасдиклаш", locale=lang), callback_data=tasdiqlash_callback.new('extra_tasdiqlash')))
+    extra_skills_kb2.add(InlineKeyboardButton(_("🔙  Оркага", locale=lang), callback_data=tasdiqlash_callback.new("ortga")))
+
+    return extra_skills_kb2
+
+def start_test_inl_kb(lang):
+    keyb = InlineKeyboardMarkup(
+        inline_keyboard=[[
+            InlineKeyboardButton(_("Тестни бошлаш", locale=lang), callback_data=testlar_callback.new('start', 'start', 'start'))
+        ]])
+
+    return keyb
+
+def test_question_inl_kb(qid, A, B, C, D, category):
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(f"A: {A}", callback_data=testlar_callback.new(category, qid, "A"))],
+            [InlineKeyboardButton(f"B: {B}", callback_data=testlar_callback.new(category, qid, "B"))],
+            [InlineKeyboardButton(f"C: {C}", callback_data=testlar_callback.new(category, qid, "C"))],
+            [InlineKeyboardButton(f"D: {D}", callback_data=testlar_callback.new(category, qid, "D"))]
+        ]
+    )
